@@ -1,0 +1,11 @@
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/static/semantic.min.js"></script>
+	<link href="/static/semantic.min.css" rel="stylesheet" type="text/css" class="ui">
+	<script src="https://semantic-ui.com/dist/components/transition.js"></script>
+	<script src="https://semantic-ui.com/dist/components/dropdown.js"></script>
+	<script src="https://semantic-ui.com/dist/components/visibility.js"></script>
+	<script src="http://cdn.jsdelivr.net/jquery.glide/1.0.6/jquery.glide.min.js"></script>
+
+	<link href="/static/tablesaw.css" rel="stylesheet">
+	<script src="/static/tablesaw.js"></script>
+	<script src="/static/tablesaw-init.js"></script>

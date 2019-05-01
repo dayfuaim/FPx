@@ -1,0 +1,8 @@
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/static/semantic.min.js"></script>
+	<link href="/static/semantic.min.css" rel="stylesheet" type="text/css" class="ui">
+	<script src="https://semantic-ui.com/dist/components/transition.js"></script>
+	<script src="https://semantic-ui.com/dist/components/dropdown.js"></script>
+	<script src="https://semantic-ui.com/dist/components/form.js"></script>
+	<script type="text/javascript" src="/static/calendar.min.js"></script>
+	<link rel="stylesheet" href="/static/calendar.min.css" />

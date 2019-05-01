@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'Cats';
+<h2>CAt list</h2>
+<p>
+	<%= $msg %>
+</p>

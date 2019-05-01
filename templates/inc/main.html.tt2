@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ru">
+<head>
+	<meta charset="utf-8"/>
+	<title>[% title %]</title>
+	[% INSERT 'inc/libs' %]
+	<script>
+	$(document).ready(function() {
+
+		$('#mymodal')
+			.modal({
+				transition: 'fade down',
+				// duration: 100
+			})
+			.modal('attach events', '#fp_add', 'show')
+		;
+	});
+	</script>
+	<style>
+		body {
+			/* font-family: Roboto !important; */
+		}
+	</style>
+</head>
+<body>
+
+[%# INCLUDE 'inc/sidebar' %]
+
+[% INCLUDE 'inc/main_menu' %]
+
+	<div class="ui container" id="main">
+		<div class="ui pusher" id="inner">
+			<div class="ui container">
+				[% INCLUDE 'layouts/welcome' %]
+			</div>
+
+		</div>
+	</div>
+
+[%# THE Stuff %]
+<div class="ui small modal" id="mymodal">
+	<div class="header">Header</div>
+	<div class="content">
+		<p>Content</p>
+		<p>Two</p>
+		<p>three</p>
+		<div class="description">
+			<p>Yo Description.</p>
+		</div>
+	</div>
+	<div class="actions">
+		<div class="ui approve button">Approve</div>
+		<div class="ui button">Neutral</div>
+		<div class="ui cancel button">Cancel</div>
+	</div>
+</div>
+</div>
+</body>
+</html>

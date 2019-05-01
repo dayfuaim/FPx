@@ -1,0 +1,31 @@
+[% USE date(format = '%d-%m-%Y') %]
+[% calc = date.calc %]
+[% fpd = fp_now.date_in.split('-') %]
+[%# t = date(fpd.0, fpd.1, fpd.2) %]
+[% title = 'Welcome' %]
+<table class="ui celled definition single line table" data-tablesaw-mode="swipe" data-tablesaw-minimap>
+	<thead>
+		<tr>
+			<th class="three wide" scope="col" data-tablesaw-priority="persist"></th>
+	[% FOR i IN [0..13] %]
+			<th scope="col">[% date.format('0:0:0 ' _ calc.Add_Delta_Days(fpd.0, fpd.1, fpd.2, i).reverse.join(':')) %]</th>
+	[% END %]
+			<th class="two wide" scope="col" data-tablesaw-priority="persist">Остаток</th>
+		</tr>
+	</thead>
+	<tbody>
+	[% FOREACH cat IN cats %]
+		<tr>
+			<td class="three wide" id="cat_[% cat.id %]">[% cat.name %]</td>
+		[% FOR i IN [0..13] %]
+			<td class="two wide">
+				<div class="ui transparent small input">
+					<input type="text"  id="catsum_[% calc.Add_Delta_Days(fpd.0, fpd.1, fpd.2, i).reverse.join('') %]_[% cat.id %]" placeholder="Search...">
+				</div>
+			</td>
+		[% END %]
+			<td class="two wide" id="fpcat_[% cat.id %]"><b>_DELTA_</b></td>
+		</tr>
+	[% END %]
+	</tbody>
+</table>

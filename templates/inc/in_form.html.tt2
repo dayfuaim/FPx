@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="ru">
+<head>
+	<meta charset="utf-8"/>
+	<title>Новый расход</title>
+	[% INSERT 'inc/form_libs' %]
+	<script>
+	$(document).ready(function() {
+		$('#dt').calendar({
+			type: 'date',
+			today: true,         // show a 'today/now' button at the bottom of the calendar
+    		closable: true,       // close the popup after selecting a date/time
+    		initialDate: null,
+    		firstDayOfWeek: 1,
+			formatter: {
+				date: function (date, settings) {
+					if (!date) return '';
+					var day = date.getDate();
+					day = (day < 10) ? '0'+day : day;
+					var month = date.getMonth() + 1;
+					month = (month < 10) ? '0'+month : month;
+					var year = date.getFullYear();
+					return day + '.' + month + '.' + year;
+				}
+			},
+			text: {
+				days: ['Вск', 'Пон', 'Втр', 'Срд', 'Чтв', 'Птн', 'Суб'],
+				months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+				monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Нов', 'Дек'],
+				today: 'Сегодня',
+				now: 'Сейчас',
+				am: '',
+				pm: ''
+			},
+		});
+
+		$('.button.submit').on('click ', function(){
+			event.preventDefault();
+			console.log("Let's go!");
+			var date = $('#date').val();
+			var sum = $('#sum').val();
+			var cat_id = $('#cat_id').val();
+			var comment = $('#comment').val();
+			if (sum!=='') {
+				$('#addpay').toggleClass('loading');
+				var URL = '/payment/add';
+				_log(">>>> Sending: "+URL);
+				var aObj = $.ajax(
+					{
+						type: 'POST',
+						data: {
+							date: date,
+							sum: sum,
+							cat_id: cat_id,
+							comment: comment
+						},
+						dataType: "json",
+						cache: false,
+						// contentType: "application/json",
+						url: '/payment/add'
+					}
+				)
+				.done(function(data) {
+					_log("OK");
+				})
+				.fail(function() {
+					_log("Oops!")
+				})
+				.always(function(data) {
+					_log(data);
+					$('#addpay').toggleClass('loading');
+				});
+			} else {
+				// $('#myform').toggleClass('loading');
+				_log("ERROR! Nothing to send!");
+			}
+
+			return false
+		});
+
+		function _log(text) {
+			console.log(text);
+			if ($('#log').val()) {
+				$('#log').val($('#log').val() + "\n" + text);
+			} else {
+				$('#log').val(text);
+			}
+		}
+
+		$('.ui.dropdown')
+			.dropdown()
+		;
+	});
+	</script>
+	<style>
+		body > .grid {
+		  height: 100%;
+		}
+		.image {
+		  margin-top: -100px;
+		}
+		.column {
+		  max-width: 450px;
+		}
+	</style>
+</head>
+<body>
+
+<div class="ui middle aligned center aligned grid" id="main">
+	<div class="column">
+		<h2 class="ui blue header">Новый расход</h2>
+		<form class="ui large form" id="addpay">
+			<div class="ui stacked segment">
+				<div class="field">
+					<div class="ui calendar" id="dt"><div class="ui input left icon"><i class="calendar icon"></i><input type="text" id="date" name="date" placeholder="Дата"></div></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input">
+						<select class="ui dropdown" name="cat_id" id="cat_id">
+						[% FOREACH cat IN cats %]
+							<option value="[% cat.id %]">[% cat.name %]</option>
+						[% END %]
+						</select>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
+				</div>
+				<div class="ui fluid large blue submit button">Добавить</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+[%# THE Stuff %]
+
+</body>
+</html>
