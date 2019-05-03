@@ -6,8 +6,8 @@ use Date::Calc qw(:all);
 use FPx::Schema;
 
 my $schema = FPx::Schema->connect(
-	'dbi:pg:database=fpx', 'dayfuaim', '',
-	{ AutoCommit => 1, quote_names => 1 }
+	'dbi:Pg:dbname=fpx', 'dayfuaim', '',
+	{ AutoCommit => 1, RaiseError => 1 }
 );
 
 sub current {

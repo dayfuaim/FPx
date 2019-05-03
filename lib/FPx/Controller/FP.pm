@@ -6,9 +6,8 @@ use uni::perl ':dumper';
 use utf8;
 
 my $schema = FPx::Schema->connect(
-	'dbi:mysql:database=fpx', 'root', '',
-	{ AutoCommit => 1, quote_names => 1,
-      mysql_enable_utf8 => 1, }
+	'dbi:Pg:dbname=fpx', 'dayfuaim', '',
+	{ AutoCommit => 1, RaiseError => 1, }
 );
 
 # This action will render a template
