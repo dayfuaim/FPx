@@ -5,7 +5,7 @@ use uni::perl qw(:dumper);
 use FPx::Schema;
 
 my $schema = FPx::Schema->connect(
-	'dbi:pg:database=fpx', 'dayfuaim', '',
+	'dbi:Pg:database=fpx', 'dayfuaim', '',
 	{ AutoCommit => 1, quote_names => 1 }
 );
 
