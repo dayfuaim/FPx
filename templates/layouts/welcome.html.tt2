@@ -1,6 +1,7 @@
 [% USE date(format = '%d-%m-%Y') %]
+[% USE Dumper %]
 [% calc = date.calc %]
-[% fpd = fp_now.date_in.split('-') %]
+[% fpd = fpd || calc.Today; # fp_now.date_in.split('-') %]
 [%# t = date(fpd.0, fpd.1, fpd.2) %]
 [% title = 'Welcome' %]
 <table class="ui celled definition single line table" data-tablesaw-mode="swipe" data-tablesaw-minimap>

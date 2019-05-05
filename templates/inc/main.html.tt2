@@ -24,7 +24,7 @@
 </head>
 <body>
 
-[%# INCLUDE 'inc/sidebar' %]
+[% INCLUDE 'inc/sidebar' %]
 
 [% INCLUDE 'inc/main_menu' %]
 
@@ -54,6 +54,6 @@
 		<div class="ui cancel button">Cancel</div>
 	</div>
 </div>
-</div>
+
 </body>
 </html>
