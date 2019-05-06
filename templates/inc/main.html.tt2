@@ -31,7 +31,7 @@
 	<div class="ui container" id="main">
 		<div class="ui pusher" id="inner">
 			<div class="ui container">
-				[% INCLUDE 'layouts/welcome' %]
+				[%# INCLUDE 'layouts/welcome' %]
 			</div>
 
 		</div>
