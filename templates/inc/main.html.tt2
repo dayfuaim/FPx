@@ -28,9 +28,19 @@
 
 [% INCLUDE 'inc/main_menu' %]
 
+[% USE dumper %]
+
 	<div class="ui container" id="main">
 		<div class="ui pusher" id="inner">
 			<div class="ui container">
+<pre>[% dumper.dump(fp_all) %]</pre>
+<div class="ui vertical menu">
+[% FOR cat IN cats %]
+	<a class="item" id="cat_[% cat.id %]">[% cat.name %] <div class="ui label">[% cat.id %]</div></a>
+[% END %]
+</div>
+
+
 				[%# INCLUDE 'layouts/welcome' %]
 			</div>
 

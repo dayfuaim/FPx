@@ -36,4 +36,10 @@ sub add {
 	return $fp
 }
 
+sub all {
+	my $self = shift;
+	my $fp = $schema->resultset('Fp')->search()->all;
+	return $fp
+}
+
 1;
