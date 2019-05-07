@@ -1,21 +1,10 @@
+[% USE dumper %]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="ru">
 <head>
 	<meta charset="utf-8"/>
 	<title>[% title %]</title>
 	[% INSERT 'inc/libs' %]
-	<script>
-	$(document).ready(function() {
-
-		$('#mymodal')
-			.modal({
-				transition: 'fade down',
-				// duration: 100
-			})
-			.modal('attach events', '#fp_add', 'show')
-		;
-	});
-	</script>
 	<style>
 		body {
 			/* font-family: Roboto !important; */
@@ -28,11 +17,12 @@
 
 [% INCLUDE 'inc/main_menu' %]
 
-[% USE dumper %]
 
-	<div class="ui container" id="main">
+	<!-- <div class="ui container" id="main"> -->
 		<div class="ui pusher" id="inner">
 			<div class="ui container">
+
+
 <pre>[% dumper.dump(fp_all) %]</pre>
 <div class="ui vertical menu">
 [% FOR cat IN cats %]
@@ -45,7 +35,7 @@
 			</div>
 
 		</div>
-	</div>
+	<!-- </div> -->
 
 [%# THE Stuff %]
 <div class="ui small modal" id="mymodal">
@@ -65,5 +55,21 @@
 	</div>
 </div>
 
+<script>
+$(function() {
+
+	$('#mymodal')
+		.modal({
+			transition: 'fade down',
+		})
+		.modal('attach events', '#fp_add', 'show')
+	;
+
+	$('.left.sidebar')
+		.sidebar('setting', 'transition', 'overlay')
+ 		.sidebar('attach events', '#cat_add')
+ 	;
+});
+</script>
 </body>
 </html>
