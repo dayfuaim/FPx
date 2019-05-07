@@ -6,8 +6,11 @@
 	<title>[% title %]</title>
 	[% INSERT 'inc/libs' %]
 	<style>
-		body {
-			/* font-family: Roboto !important; */
+		body, .ui.menu, .ui.card>.content>.header, .ui.cards>.card>.content>.header {
+			font-family: "IBM Plex Sans" !important;
+		}
+		#inner {
+			padding-top: 50px;
 		}
 	</style>
 </head>
@@ -23,11 +26,28 @@
 			<div class="ui container">
 
 
-<pre>[% dumper.dump(fp_all) %]</pre>
-<div class="ui vertical menu">
+<div class="ui cards">
+
 [% FOR cat IN cats %]
-	<a class="item" id="cat_[% cat.id %]">[% cat.name %] <div class="ui label">[% cat.id %]</div></a>
+	<div class="ui card">
+	  <div class="content">
+	    <a class="header">[% cat.name %]</a>
+	    <div class="meta">
+	      <span class="date">[% cat.name %]</span>
+	    </div>
+	    <div class="description">
+	      Эта карточка про [% cat.name %].
+	    </div>
+	  </div>
+	  <div class="extra content">
+	    <a>
+	      <i class="user icon"></i>
+	      Что-то ещё про это...
+	    </a>
+	  </div>
+	</div>
 [% END %]
+
 </div>
 
 
@@ -67,7 +87,7 @@ $(function() {
 
 	$('.left.sidebar')
 		.sidebar('setting', 'transition', 'overlay')
- 		.sidebar('attach events', '#cat_add')
+ 		.sidebar('attach events', '#side_menu')
  	;
 });
 </script>

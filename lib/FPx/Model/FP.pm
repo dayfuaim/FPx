@@ -38,7 +38,7 @@ sub add {
 
 sub all {
 	my $self = shift;
-	my $fp = $schema->resultset('Fp')->search()->all;
+	my $fp = $schema->resultset('Fp')->search(undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' })->all;
 	return $fp
 }
 
