@@ -38,43 +38,55 @@ __PACKAGE__->table("fps");
 =head2 id
 
   data_type: 'integer'
-  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'fps_id_seq'
 
 =head2 date_in
 
-  data_type: 'date'
-  datetime_undef_if_invalid: 1
+  data_type: 'timestamp'
+  default_value: current_timestamp
   is_nullable: 0
+  original: {default_value => \"now()"}
 
 =head2 date_out
 
-  data_type: 'date'
-  datetime_undef_if_invalid: 1
+  data_type: 'timestamp'
   is_nullable: 1
 
 =head2 sum_total
 
-  data_type: 'double precision'
+  data_type: 'numeric'
+  default_value: 0.00
   is_nullable: 0
+  size: [9,2]
 
 =cut
 
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type => "integer",
-    extra => { unsigned => 1 },
+    data_type         => "integer",
     is_auto_increment => 1,
-    is_nullable => 0,
+    is_nullable       => 0,
+    sequence          => "fps_id_seq",
   },
   "date_in",
-  { data_type => "date", datetime_undef_if_invalid => 1, is_nullable => 0 },
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
   "date_out",
-  { data_type => "date", datetime_undef_if_invalid => 1, is_nullable => 1 },
+  { data_type => "timestamp", is_nullable => 1 },
   "sum_total",
-  { data_type => "double precision", is_nullable => 0 },
+  {
+    data_type => "numeric",
+    default_value => "0.00",
+    is_nullable => 0,
+    size => [9, 2],
+  },
 );
 
 =head1 PRIMARY KEY
@@ -89,56 +101,9 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
 
-=head2 fp_categories
-
-Type: has_many
-
-Related object: L<FPx::Schema::Result::FpCategory>
-
-=cut
-
-__PACKAGE__->has_many(
-  "fp_categories",
-  "FPx::Schema::Result::FpCategory",
-  { "foreign.fp_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 fp_incomes
-
-Type: has_many
-
-Related object: L<FPx::Schema::Result::FpIncome>
-
-=cut
-
-__PACKAGE__->has_many(
-  "fp_incomes",
-  "FPx::Schema::Result::FpIncome",
-  { "foreign.fp_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 fp_pockets
-
-Type: has_many
-
-Related object: L<FPx::Schema::Result::FpPocket>
-
-=cut
-
-__PACKAGE__->has_many(
-  "fp_pockets",
-  "FPx::Schema::Result::FpPocket",
-  { "foreign.fp_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-18 00:33:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:YN80pV4Q+B1ScwC29zF0lw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-08 23:44:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3VpoNAQw4ESmNCBY+TPj2w
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

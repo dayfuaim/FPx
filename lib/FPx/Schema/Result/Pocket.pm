@@ -38,34 +38,71 @@ __PACKAGE__->table("pockets");
 =head2 id
 
   data_type: 'integer'
-  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'pockets_id_seq'
 
 =head2 name
 
-  data_type: 'tinytext'
+  data_type: 'varchar'
   is_nullable: 0
+  size: 64
 
 =head2 sum
 
-  data_type: 'double precision'
+  data_type: 'numeric'
+  default_value: 0.00
   is_nullable: 0
+  size: [9,2]
+
+=head2 goal
+
+  data_type: 'numeric'
+  default_value: 0.00
+  is_nullable: 0
+  size: [9,2]
+
+=head2 accum
+
+  data_type: 'boolean'
+  default_value: false
+  is_nullable: 0
+
+=head2 to_date
+
+  data_type: 'timestamp'
+  is_nullable: 1
 
 =cut
 
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type => "integer",
-    extra => { unsigned => 1 },
+    data_type         => "integer",
     is_auto_increment => 1,
-    is_nullable => 0,
+    is_nullable       => 0,
+    sequence          => "pockets_id_seq",
   },
   "name",
-  { data_type => "tinytext", is_nullable => 0 },
+  { data_type => "varchar", is_nullable => 0, size => 64 },
   "sum",
-  { data_type => "double precision", is_nullable => 0 },
+  {
+    data_type => "numeric",
+    default_value => "0.00",
+    is_nullable => 0,
+    size => [9, 2],
+  },
+  "goal",
+  {
+    data_type => "numeric",
+    default_value => "0.00",
+    is_nullable => 0,
+    size => [9, 2],
+  },
+  "accum",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "to_date",
+  { data_type => "timestamp", is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -80,41 +117,9 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
-=head1 RELATIONS
 
-=head2 category_pockets
-
-Type: has_many
-
-Related object: L<FPx::Schema::Result::CategoryPocket>
-
-=cut
-
-__PACKAGE__->has_many(
-  "category_pockets",
-  "FPx::Schema::Result::CategoryPocket",
-  { "foreign.pocket_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-=head2 fp_pockets
-
-Type: has_many
-
-Related object: L<FPx::Schema::Result::FpPocket>
-
-=cut
-
-__PACKAGE__->has_many(
-  "fp_pockets",
-  "FPx::Schema::Result::FpPocket",
-  { "foreign.pocket_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-
-
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-18 00:33:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dVmPhqqpMxSapki5dG/Www
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-08 23:44:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:HR5XTUYGRBK9Vx3xuEa14A
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
