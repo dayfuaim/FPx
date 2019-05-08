@@ -24,34 +24,40 @@
 	<!-- <div class="ui container" id="main"> -->
 		<div class="ui pusher" id="inner">
 			<div class="ui fluid container">
+                <div class="ui two columns grid">
 
+                    <div class="ui twelve wide column">
+                    	<div class="ui cards">
 
-<div class="ui cards">
+	                    [% FOR cat IN cats %]
+	                    	<div class="ui card">
+	                    	  <div class="content">
+	                    	    <a class="header">[% cat.name %]</a>
+	                    	    <div class="meta">
+	                    	      <span class="date">[% cat.name %]</span>
+	                    	    </div>
+	                    	    <div class="description">
+	                    	      Эта карточка про [% cat.name %].
+	                    	    </div>
+	                    	  </div>
+	                    	  <div class="extra content">
+	                    	    <a>
+	                    	      <i class="user icon"></i>
+	                    	      Что-то ещё про это...
+	                    	    </a>
+	                    	  </div>
+	                    	</div>
+	                    [% END %]
 
-[% FOR cat IN cats %]
-	<div class="ui card">
-	  <div class="content">
-	    <a class="header">[% cat.name %]</a>
-	    <div class="meta">
-	      <span class="date">[% cat.name %]</span>
-	    </div>
-	    <div class="description">
-	      Эта карточка про [% cat.name %].
-	    </div>
-	  </div>
-	  <div class="extra content">
-	    <a>
-	      <i class="user icon"></i>
-	      Что-то ещё про это...
-	    </a>
-	  </div>
-	</div>
-[% END %]
+                    	</div>
+                    </div>
 
-</div>
+                    <div class="four wide column">
+                        <pre>[% dumper.dump(pockets) %]</pre>
+                    </div>
 
+                </div>
 
-				[%# INCLUDE 'layouts/welcome' %]
 			</div>
 
 		</div>

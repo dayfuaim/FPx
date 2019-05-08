@@ -6,7 +6,7 @@ use utf8;
 use FPx::Schema;
 
 my $schema = FPx::Schema->connect(
-	'dbi:pg:database=fpx', 'dayfuaim', '',
+	'dbi:Pg:database=fpx', 'dayfuaim', '',
 	{ AutoCommit => 1, RaiseError => 1 }
 );
 
