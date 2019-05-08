@@ -19,6 +19,7 @@ sub welcome {
 
 	my $tt = $self->stash('name') || 'noname';
 	$self->stash(cats => $self->model("Category")->get());
+	$self->stash(pockets => $self->model("Pocket")->get());
 	$self->stash(fp_all => $self->model("FP")->all());
 
   	# Render template "example/welcome.html.ep" with message

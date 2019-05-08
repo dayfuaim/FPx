@@ -7,7 +7,7 @@ use FPx::Schema;
 
 my $schema = FPx::Schema->connect(
 	'dbi:pg:database=fpx', 'dayfuaim', '',
-	{ AutoCommit => 1, quote_names => 1 }
+	{ AutoCommit => 1, RaiseError => 1 }
 );
 
 sub add_pay {
