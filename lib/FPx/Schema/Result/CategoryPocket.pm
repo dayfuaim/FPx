@@ -6,7 +6,7 @@ package FPx::Schema::Result::CategoryPocket;
 
 =head1 NAME
 
-FPx::Schema::Result::CategoryPocket
+FPx::Schema::Result::CategoryPocket - Связка Категорий с Карманами. 1 -> N
 
 =cut
 
@@ -38,21 +38,19 @@ __PACKAGE__->table("category_pockets");
 =head2 id
 
   data_type: 'integer'
-  extra: {unsigned => 1}
   is_auto_increment: 1
   is_nullable: 0
+  sequence: 'category_pockets_id_seq'
 
 =head2 category_id
 
   data_type: 'integer'
-  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
 
 =head2 pocket_id
 
   data_type: 'integer'
-  extra: {unsigned => 1}
   is_foreign_key: 1
   is_nullable: 0
 
@@ -61,25 +59,15 @@ __PACKAGE__->table("category_pockets");
 __PACKAGE__->add_columns(
   "id",
   {
-    data_type => "integer",
-    extra => { unsigned => 1 },
+    data_type         => "integer",
     is_auto_increment => 1,
-    is_nullable => 0,
+    is_nullable       => 0,
+    sequence          => "category_pockets_id_seq",
   },
   "category_id",
-  {
-    data_type => "integer",
-    extra => { unsigned => 1 },
-    is_foreign_key => 1,
-    is_nullable => 0,
-  },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "pocket_id",
-  {
-    data_type => "integer",
-    extra => { unsigned => 1 },
-    is_foreign_key => 1,
-    is_nullable => 0,
-  },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -108,7 +96,7 @@ __PACKAGE__->belongs_to(
   "category",
   "FPx::Schema::Result::Category",
   { id => "category_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 =head2 pocket
@@ -123,12 +111,12 @@ __PACKAGE__->belongs_to(
   "pocket",
   "FPx::Schema::Result::Pocket",
   { id => "pocket_id" },
-  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07046 @ 2017-04-18 00:33:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:m9YC27m+MrTndSQgoAhI2Q
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-15 21:46:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FHx5CGX5fvmYWC+3mLXpDw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

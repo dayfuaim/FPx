@@ -102,9 +102,26 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-08 23:44:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vAwRe7eSX7VYRzp/oDMr8A
+=head2 fp_incomes
+
+Type: has_many
+
+Related object: L<FPx::Schema::Result::FpIncome>
+
+=cut
+
+__PACKAGE__->has_many(
+  "fp_incomes",
+  "FPx::Schema::Result::FpIncome",
+  { "foreign.income_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-15 21:46:36
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:z4OTVuHtiFe76pWH+lt+gQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
