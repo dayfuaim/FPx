@@ -1,12 +1,12 @@
 use utf8;
-package FPx::Schema::Result::FpCategory;
+package FPx::Schema::Result::FpPayment;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-FPx::Schema::Result::FpCategory - Таблица ФП по Категориям: то, что запланировано.
+FPx::Schema::Result::FpPayment - Главная таблица ФП: Платежи по Категориям в текущее ФП.
 
 =cut
 
@@ -27,11 +27,11 @@ use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime");
 
-=head1 TABLE: C<fp_categories>
+=head1 TABLE: C<fp_payments>
 
 =cut
 
-__PACKAGE__->table("fp_categories");
+__PACKAGE__->table("fp_payments");
 
 =head1 ACCESSORS
 
@@ -40,7 +40,7 @@ __PACKAGE__->table("fp_categories");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'fp_categories_id_seq'
+  sequence: 'fp_payments_id_seq'
 
 =head2 fp_id
 
@@ -54,18 +54,30 @@ __PACKAGE__->table("fp_categories");
   is_foreign_key: 1
   is_nullable: 0
 
-=head2 sum
+=head2 payment_id
 
-  data_type: 'numeric'
-  default_value: 0.0
+  data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
-  size: [9,2]
+
+=head2 pocket_id
+
+  data_type: 'integer'
+  default_value: 0
+  is_nullable: 0
 
 =head2 comment
 
   data_type: 'varchar'
   is_nullable: 1
   size: 64
+
+=head2 date_in
+
+  data_type: 'timestamp'
+  default_value: current_timestamp
+  is_nullable: 0
+  original: {default_value => \"now()"}
 
 =cut
 
@@ -75,21 +87,25 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "fp_categories_id_seq",
+    sequence          => "fp_payments_id_seq",
   },
   "fp_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "category_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
-  "sum",
-  {
-    data_type => "numeric",
-    default_value => "0.0",
-    is_nullable => 0,
-    size => [9, 2],
-  },
+  "payment_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
+  "pocket_id",
+  { data_type => "integer", default_value => 0, is_nullable => 0 },
   "comment",
   { data_type => "varchar", is_nullable => 1, size => 64 },
+  "date_in",
+  {
+    data_type     => "timestamp",
+    default_value => \"current_timestamp",
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
+  },
 );
 
 =head1 PRIMARY KEY
@@ -136,9 +152,24 @@ __PACKAGE__->belongs_to(
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
 
+=head2 payment
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-15 21:46:36
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:x9isFEJpnah6vHSu8oSUSA
+Type: belongs_to
+
+Related object: L<FPx::Schema::Result::Payment>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "payment",
+  "FPx::Schema::Result::Payment",
+  { id => "payment_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2019-05-15 21:49:54
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kUTfJ3eitfjLIuTrU8lskQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

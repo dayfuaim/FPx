@@ -1,10 +1,10 @@
 [%# Main Menu %]
-  <div class="ui top sticky main menu">
+<div class="ui top fixed menu">
 	<div class="ui fluid container">
-	  <div class="header item">FPx</div>
+		<div class="header item"><a href="#" id="side_menu"><i class="content icon"></i> FPx</a></div>
 		<a href="#" class="item" id="fp_add">Add FP</a>
 		<a href="#" class="item" id="cat_add">Add Category</a>
 		<a href="#" class="item" id="cat_edit">Edit Category</a>
 		<a href="#" class="item" id="income_add">Add Income</a>
 	</div>
-  </div>
+</div>
