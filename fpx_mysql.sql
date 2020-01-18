@@ -49,7 +49,7 @@ CREATE TABLE payments (
 DROP TABLE IF EXISTS pockets;
 CREATE TABLE pockets (
   id integer NOT NULL,
-  name text(64) NOT NULL,
+  name varchar(64) NOT NULL, -- was text(64)
   sum real NOT NULL,
   PRIMARY KEY (id)
 );

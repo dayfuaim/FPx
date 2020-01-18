@@ -5,6 +5,8 @@
 	<meta charset="utf-8"/>
 	<title>[% title %]</title>
 	[% INSERT 'inc/libs' %]
+	<script type="text/javascript" src="/static/calendar.min.js"></script>
+	<link rel="stylesheet" href="/static/calendar.min.css" />
 	<style>
 		body, .ui.menu, .ui.card>.content>.header, .ui.cards>.card>.content>.header, h1, h2, h3, h4, h5, .ui.header {
 			font-family: "IBM Plex Sans" !important;
@@ -24,9 +26,20 @@
 	<!-- <div class="ui container" id="main"> -->
 		<div class="ui pusher" id="inner">
 			<div class="ui fluid container">
-                <div class="ui two columns padded grid">
 
-                    <div class="twelve wide computer sixteen wide mobile column">
+                <div class="ui padded grid">
+
+                	<div class="three wide computer sixteen wide mobile column">
+                    	<div class="ui segments">
+                    	[% FOR fpcat IN fp_cats %]
+                    		<div class="ui clearing segment">
+                    			<h3 class="ui header"><span class="ui large label">[% fpcat.name %]</span></h3> <h3 class="ui right aligned header">[% fpcat.sum %]</h3>
+                    		</div>
+                    	[% END %]
+                		</div>
+                	</div>
+
+                    <div class="ten wide computer sixteen wide mobile column">
                     	<div class="ui cards">
 
 	                    [% FOR cat IN cats %]
@@ -40,11 +53,8 @@
 	                    	      Эта карточка про [% cat.name %].
 	                    	    </div>
 	                    	  </div>
-	                    	  <div class="extra content">
-	                    	    <a>
-	                    	      <i class="user icon"></i>
-	                    	      Что-то ещё про это...
-	                    	    </a>
+	                    	  <div class="ui bottom attached button" id="addpay[% cat.id %]">
+	                    	      <i class="add icon"></i> Новый расход
 	                    	  </div>
 	                    	</div>
 	                    [% END %]
@@ -52,15 +62,15 @@
                     	</div>
                     </div>
 
-                    <div class="four wide computer sixteen wide mobile column">
+					<!-- Pockets -->
+                    <div class="three wide computer sixteen wide mobile column">
                     	<div class="ui segments">
                     	[% FOR pock IN pockets %]
                     		<div class="ui clearing segment">
-                    			<h3 class="ui left floated header">[% pock.name %]</h3> <h3 class="ui right floated header"><span class="ui large label">[% pock.sum %]</span></h3>
+                    			<h3 class="ui header"><span class="ui large label">[% pock.name %]</span></h3> <h3 class="ui right aligned header">[% pock.sum %]</h3>
                     		</div>
                     	[% END %]
                 		</div>
-                        <!--pre>[% dumper.dump(pockets) %]</pre -->
                     </div>
 
                 </div>
@@ -72,30 +82,133 @@
 
 [%# THE Stuff %]
 <div class="ui small modal" id="mymodal">
-	<div class="header">Header</div>
+	<div class="ui blue header">Новый расход</div>
 	<div class="content">
-		<p>Content</p>
-		<p>Two</p>
-		<p>three</p>
-		<div class="description">
-			<p>Yo Description.</p>
-		</div>
+		<form class="ui large form" id="addpay">
+			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
+			<div class="ui stacked segment">
+				<div class="field">
+					<div class="ui calendar" id="dt"><div class="ui input left icon"><i class="calendar icon"></i><input type="text" id="date" name="date" placeholder="Дата"></div></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input">
+						<select class="ui dropdown" name="cat_id" id="cat_id">
+						[% FOREACH cat IN cats %]
+							<option value="[% cat.id %]">[% cat.name %]</option>
+						[% END %]
+						</select>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
+				</div>
+			</div>
+		</form>
 	</div>
 	<div class="actions">
-		<div class="ui approve button">Approve</div>
-		<div class="ui button">Neutral</div>
 		<div class="ui cancel button">Cancel</div>
+		<div class="ui positive approve button">Добавить</div>
 	</div>
 </div>
 
 <script>
 $(function() {
+	let cal_options = {
+		type: 'date',
+		today: true,         // show a 'today/now' button at the bottom of the calendar
+		closable: true,       // close the popup after selecting a date/time
+		initialDate: null,
+		firstDayOfWeek: 1,
+		formatter: {
+			date: function (date, settings) {
+				if (!date) return '';
+				let day = date.getDate();
+				day = (day < 10) ? '0'+day : day;
+				let month = date.getMonth() + 1;
+				month = (month < 10) ? '0'+month : month;
+				let year = date.getFullYear();
+				return day + '.' + month + '.' + year;
+			}
+		},
+		text: {
+			days: ['Вск', 'Пон', 'Втр', 'Срд', 'Чтв', 'Птн', 'Суб'],
+			months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
+			monthsShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Нов', 'Дек'],
+			today: 'Сегодня',
+			now: 'Сейчас',
+			am: '',
+			pm: ''
+		},
+	};
 
 	$('#mymodal')
 		.modal({
 			transition: 'fade down',
+			onShow: function() {
+				$('#dt').calendar(cal_options);
+			},
+			onApprove: function() {
+				console.log("Let's go!");
+				let fp_id = $('#fp_id').val();
+				let date = $('#date').val();
+				let sum = $('#sum').val();
+				let cat_id = $('#cat_id').val();
+				let comment = $('#comment').val();
+				if (sum!=='') {
+					$('#addpay').toggleClass('loading');
+					let URL = '/payment/add';
+					_log(">>>> Sending: "+URL);
+					let aObj = $.ajax(
+						{
+							type: 'POST',
+							data: {
+								fp_id: fp_id,
+								date: date,
+								sum: sum,
+								cat_id: cat_id,
+								comment: comment
+							},
+							dataType: "json",
+							cache: false,
+							// contentType: "application/json",
+							url: '/payment/add'
+						}
+					)
+					.done(function(data) {
+						_log("OK");
+					})
+					.fail(function() {
+						_log("Oops!")
+					})
+					.always(function(data) {
+						_log(data);
+						$('#addpay').toggleClass('loading');
+					});
+				} else {
+					// $('#myform').toggleClass('loading');
+					_log("ERROR! Nothing to send!");
+				}
+
+				return false
+			},
 		})
 		.modal('attach events', '#fp_add', 'show')
+	;
+
+	function _log(text) {
+		console.log(text);
+		if ($('#log').val()) {
+			$('#log').val($('#log').val() + "\n" + text);
+		} else {
+			$('#log').val(text);
+		}
+	}
+
+	$('.ui.dropdown')
+		.dropdown()
 	;
 
 	$('.left.sidebar')

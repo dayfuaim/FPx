@@ -22,6 +22,7 @@ sub form {
 sub add {
   	my $self = shift;
 
+	my $fp_id = $self->param('fp_id');
 	my $date = $self->param('date');
 	if ($date =~ /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/) {
 		$date = sprintf("%4d-%02d-%02d",$3,$2,$1)
@@ -36,7 +37,8 @@ sub add {
 	$sum //= 0;
 
 	my $pay_id = $self->model('Payment')->add_pay($date, $sum, $comment);
-	my $catpay = $schema->resultset('CategoryPayment')->update_or_create({
+	my $catpay = $schema->resultset('FpPayment')->update_or_create({
+		fp_id => $fp_id,
 		payment_id => $pay_id,
 		category_id => $cat_id,
 	})->id;
