@@ -1,0 +1,1 @@
+pg_dump -d fpx -C -c --inserts --if-exists -f fpx_pg.sql
