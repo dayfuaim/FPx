@@ -29,6 +29,8 @@ sub current {
 sub add {
 	my $self = shift;
 	my $fp;
+	my $last_last_dt;
+	# Пытаемся найти последний день последнего ФП
 	my $last_dt = $schema->resultset('Fp')->search({
 			date_out => { '<', \'NOW()' }
 		},
@@ -39,10 +41,21 @@ sub add {
 	if ($last_dt) {
 		$last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 1);
 		say ">>>> date_in: ".dumper($last_dt);
-		my $last_last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 13);
+		$last_last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 13);
 		say ">>>> date_out: ".dumper($last_last_dt);
-		$fp = $schema->resultset('Fp')->create({ date_in => $last_dt, date_out => $last_last_dt, sum_total => 0 },{ result_class => 'DBIx::Class::ResultClass::HashRefInflator' });
+	} else {
+		# Если таких нет, то откатимся до ближайшего четверга и создадим ФП от него.
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime;
+		# NB: wday = 0(7) в воскресенье, т.е. воскресенье = (четверг(3) + 4) % 7
+		# [ 3,  4,  5,  6,  0,  1,  2 ]
+		# [ 0, -1, -2, -3, -4, -5, -6 ]
+		my $back_days = $wday - 3;
+		$last_dt = join '-', Add_Delta_Days(($year + 1900, $mon + 1, $mday), $back_days);
+		say ">>>> date_in: ".dumper($last_dt);
+		$last_last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 13);
+		say ">>>> date_out: ".dumper($last_last_dt);
 	}
+	$fp = $schema->resultset('Fp')->create({ date_in => $last_dt, date_out => $last_last_dt, sum_total => 0 },{ result_class => 'DBIx::Class::ResultClass::HashRefInflator' });
 	return $fp
 }
 
