@@ -7,6 +7,8 @@ use FPx::Model::Category;
 use uni::perl ':dumper';
 use utf8;
 
+use DDP;
+
 # my $schema = FPx::Schema->connect(
 # 	'dbi:mysql:database=fpx', 'root', '',
 # 	{ AutoCommit => 1, quote_names => 1,
@@ -16,6 +18,8 @@ use utf8;
 # This action will render a template
 sub welcome {
   	my $self = shift;
+
+    say __PACKAGE__ . ": We are here!";
 
 	my $tt = $self->stash('name') || 'noname';
 	$self->stash(cats => $self->model("Category")->get());

@@ -2,7 +2,7 @@
 <div class="ui top fixed menu">
 	<div class="ui fluid container">
 		<div class="header item"><a href="#" id="side_menu"><i class="content icon"></i> FPx</a></div>
-		<a href="#" class="item" id="fp_add">Add FP</a>
+		<a href="#" class="item" id="fp_add">Добавить расход</a>
 		<a href="#" class="item" id="cat_add"><i class="add icon"></i> Add Category</a>
 		<a href="#" class="item" id="cat_edit"><i class="add icon"></i> Edit Category</a>
 		<a href="#" class="item" id="income_add"><i class="add icon"></i> Add Income</a>

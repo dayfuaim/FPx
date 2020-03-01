@@ -37,14 +37,14 @@ sub add {
 	$sum //= 0;
 
 	my $pay_id = $self->model('Payment')->add_pay($date, $sum, $comment);
-	my $catpay = $schema->resultset('FpPayment')->update_or_create({
+	my $catpay_id = $schema->resultset('FpPayment')->update_or_create({
 		fp_id => $fp_id,
 		payment_id => $pay_id,
 		category_id => $cat_id,
 	})->id;
 
   	# Render JSON
-  	$self->render(json => { catpay_id => $catpay, pay_id => $pay_id, date => $date, sum => $sum, comment => $comment });
+  	$self->render(json => { catpay_id => $catpay_id, pay_id => $pay_id, date => $date, sum => $sum, comment => $comment });
 }
 
 1;

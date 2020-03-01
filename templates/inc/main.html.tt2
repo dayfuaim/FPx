@@ -53,9 +53,9 @@
 	                    	      Эта карточка про [% cat.name %].
 	                    	    </div>
 	                    	  </div>
-	                    	  <div class="ui bottom attached button" id="addpay[% cat.id %]">
+	                    	  <button class="ui bottom attached button" id="addpay[% cat.id %]">
 	                    	      <i class="add icon"></i> Новый расход
-	                    	  </div>
+	                    	  </button>
 	                    	</div>
 	                    [% END %]
 
@@ -109,8 +109,8 @@
 		</form>
 	</div>
 	<div class="actions">
-		<div class="ui cancel button">Cancel</div>
-		<div class="ui positive approve button">Добавить</div>
+		<button class="ui cancel button">Cancel</button>
+		<button class="ui positive approve button">Добавить</button>
 	</div>
 </div>
 
@@ -163,6 +163,7 @@ $(function() {
 					_log(">>>> Sending: "+URL);
 					let aObj = $.ajax(
 						{
+                            url: URL,
 							type: 'POST',
 							data: {
 								fp_id: fp_id,
@@ -172,13 +173,13 @@ $(function() {
 								comment: comment
 							},
 							dataType: "json",
-							cache: false,
+							cache: false
 							// contentType: "application/json",
-							url: '/payment/add'
 						}
 					)
 					.done(function(data) {
 						_log("OK");
+                        $('#mymodal').modal('hide');
 					})
 					.fail(function() {
 						_log("Oops!")
@@ -196,6 +197,7 @@ $(function() {
 			},
 		})
 		.modal('attach events', '#fp_add', 'show')
+		.modal('attach events', 'button[id^="addpay"]', 'show')
 	;
 
 	function _log(text) {

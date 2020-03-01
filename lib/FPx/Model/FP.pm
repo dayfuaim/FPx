@@ -3,6 +3,8 @@ use Mojo::Base 'MojoX::Model';
 use uni::perl qw(:dumper);
 use Date::Calc qw(:all);
 
+use DDP;
+
 use FPx::Schema;
 
 my $schema = FPx::Schema->connect(
@@ -12,6 +14,7 @@ my $schema = FPx::Schema->connect(
 
 sub current {
 	my $self = shift;
+	say ">> current";
 	my $fp = $schema->resultset('Fp')->search({
 			date_out => { '>=', \'NOW() - interval \'24 hours\'' },
 			date_in => { '<=', \'NOW()' },
@@ -20,9 +23,13 @@ sub current {
 			# result_class => 'DBIx::Class::ResultClass::HashRefInflator'
 		})->first;
 	unless ($fp) {
+		say "[FP::current] Adding new FP.";
 		$fp = $self->add()
 	}
-
+    # my @cats = $schema->resultset('Category')->all;
+    # p @cats;
+    say "[FP::Current] ".$fp->id;
+    say "current >>";
 	return $fp
 }
 
@@ -39,9 +46,9 @@ sub add {
 		})->get_column('date_out')->first;
 	say ">>>> WAS date_out: ".dumper($last_dt);
 	if ($last_dt) {
-		$last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 1);
+		$last_dt = join '-', Add_Delta_Days(split(/-/ => $last_dt), 1);
 		say ">>>> date_in: ".dumper($last_dt);
-		$last_last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 13);
+		$last_last_dt = join '-', Add_Delta_Days(split(/-/ => $last_dt), 13);
 		say ">>>> date_out: ".dumper($last_last_dt);
 	} else {
 		# Если таких нет, то откатимся до ближайшего четверга и создадим ФП от него.
@@ -52,7 +59,7 @@ sub add {
 		my $back_days = $wday - 3;
 		$last_dt = join '-', Add_Delta_Days(($year + 1900, $mon + 1, $mday), $back_days);
 		say ">>>> date_in: ".dumper($last_dt);
-		$last_last_dt = join '-', Add_Delta_Days(split(/-/=>$last_dt), 13);
+		$last_last_dt = join '-', Add_Delta_Days(split(/-/ => $last_dt), 13);
 		say ">>>> date_out: ".dumper($last_last_dt);
 	}
 	$fp = $schema->resultset('Fp')->create({ date_in => $last_dt, date_out => $last_last_dt, sum_total => 0 },{ result_class => 'DBIx::Class::ResultClass::HashRefInflator' });
@@ -67,10 +74,12 @@ sub all {
 
 sub all_planned {
 	my $self = shift;
+	say ">> all_planned";
 	my $fp_current = $self->current();
+    $schema->storage->debug(1);
 	my @fp = $schema->resultset('FpCategory')->search(
 		{
-			fp_id => $fp_current->{id},
+			fp_id => $fp_current->id,
 		},
 		{
 			columns => [
@@ -88,6 +97,7 @@ sub all_planned {
 			sum => $f->sum,
 		};
 	}
+	say "all_planned >>";
 	return \@fpc
 }
 
