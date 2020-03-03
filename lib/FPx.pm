@@ -40,9 +40,8 @@ sub startup {
 	$r->get('/')->to('example#welcome');
 	$r->get('/new')->to('payment#form');
 	$r->post('/payment/add')->to('payment#add');
-
-	# $r->get('/cat')->to('category#list');
-	# $r->get('/cat/:id')->to('category#item');
+    $r->get('/category/fpcat/:cat')->to('category#fpcat');
+	$r->get('/category/:id')->to('category#item');
 }
 
 1;

@@ -47,4 +47,10 @@ sub add {
   	$self->render(json => { catpay_id => $catpay_id, pay_id => $pay_id, date => $date, sum => $sum, comment => $comment });
 }
 
+sub get {
+    my $self = shift;
+    # body...
+}
+
+
 1;

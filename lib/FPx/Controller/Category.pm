@@ -2,8 +2,14 @@ package FPx::Controller::Category;
 use Mojo::Base 'Mojolicious::Controller';
 
 use FPx::Schema;
+use FPx::Model::FP;
+use FPx::Model::Category;
+use FPx::Model::Payment;
+use JSON;
+
 use uni::perl ':dumper';
 use utf8;
+use DDP;
 
 my $schema = FPx::Schema->connect(
 	'dbi:Pg:dbname=fpx', 'dayfuaim', '',
@@ -30,6 +36,34 @@ sub item {
 	}
 
   	$self->render(json => $cat);
+}
+
+sub fpcat {
+    my $self = shift;
+
+    my $fp_curr = $self->model("FP")->current();
+	my $cat_id = $self->stash('cat');
+
+    my @fp_pay = $schema->resultset('FpPayment')->search(
+		{
+			fp_id => $fp_curr->id,
+            category_id => $cat_id
+		})->all;
+
+    my @fpp;
+    foreach my $p (@fp_pay) {
+        my $pay = $p->payment;
+        p $pay;
+        push @fpp => {
+            id => $p->id,
+            date => $pay->date,
+            sum => $pay->sum,
+            comment => $pay->comment
+        }
+    }
+
+    $self->render(json => { fp_curr => $fp_curr->id, cat_id => $cat_id, fp_pay => \@fpp });
+
 }
 
 1;

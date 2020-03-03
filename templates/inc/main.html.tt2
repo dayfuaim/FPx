@@ -148,6 +148,11 @@ $(function() {
 		.modal({
 			transition: 'fade down',
 			onShow: function() {
+                var elt = event.target.id;
+                if (elt.match(/^addpay\d+$/)) {
+                    var cat_id = elt.substring(6);
+                    $('.ui.dropdown').dropdown('set selected', cat_id);
+                }
 				$('#dt').calendar(cal_options);
 			},
 			onApprove: function() {
@@ -161,32 +166,44 @@ $(function() {
 					$('#addpay').toggleClass('loading');
 					let URL = '/payment/add';
 					_log(">>>> Sending: "+URL);
-					let aObj = $.ajax(
-						{
-                            url: URL,
-							type: 'POST',
-							data: {
-								fp_id: fp_id,
-								date: date,
-								sum: sum,
-								cat_id: cat_id,
-								comment: comment
-							},
-							dataType: "json",
-							cache: false
-							// contentType: "application/json",
-						}
-					)
+					let aObj = $.ajax({
+                        url: URL,
+						type: 'POST',
+						data: {
+							fp_id: fp_id,
+							date: date,
+							sum: sum,
+							cat_id: cat_id,
+							comment: comment
+						},
+						dataType: "json",
+						cache: false
+						// contentType: "application/json",
+					})
+                    .always(function(data) {
+                        console.log("!!!! ALWAYS HERE!");
+						_log(data);
+						$('#addpay').toggleClass('loading');
+					})
 					.done(function(data) {
-						_log("OK");
+						_log(`OK with ${cat_id}`);
+                        _log(`Now getting fpp from ${cat_id}`);
+                        $.ajax({
+                            type: 'GET',
+                            url: '/category/fpcat/' + cat_id
+                        })
+                        .always(function(data) {
+                            console.log("...ALWAYS.");
+                        })
+                        .done(function(data) {
+                            console.log(">> DONE with fpp!");
+                            _log(data);
+                        })
+                        .fail(function() {});
                         $('#mymodal').modal('hide');
 					})
 					.fail(function() {
 						_log("Oops!")
-					})
-					.always(function(data) {
-						_log(data);
-						$('#addpay').toggleClass('loading');
 					});
 				} else {
 					// $('#myform').toggleClass('loading');

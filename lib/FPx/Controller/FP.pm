@@ -2,6 +2,9 @@ package FPx::Controller::FP;
 use Mojo::Base 'Mojolicious::Controller';
 
 use FPx::Schema;
+use FPx::Model::FP;
+use FPx::Model::Category;
+
 use uni::perl ':dumper';
 use utf8;
 
