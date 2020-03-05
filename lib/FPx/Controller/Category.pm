@@ -53,16 +53,21 @@ sub fpcat {
     my @fpp;
     foreach my $p (@fp_pay) {
         my $pay = $p->payment;
-        p $pay;
+        my $dt = $pay->date;
         push @fpp => {
             id => $p->id,
-            date => $pay->date,
-            sum => $pay->sum,
+            date => qq{$dt},
+            sum => sprintf("%.2f", $pay->sum),
             comment => $pay->comment
         }
     }
+    @fpp = sort { $a->{date} cmp $b->{date} || $a->{id} <=> $b->{id} } @fpp;
 
-    $self->render(json => { fp_curr => $fp_curr->id, cat_id => $cat_id, fp_pay => \@fpp });
+    $self->render(json => {
+        fp_curr => $fp_curr->id,
+        cat_id => $cat_id,
+        fp_pay => \@fpp
+    });
 
 }
 

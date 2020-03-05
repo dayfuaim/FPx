@@ -53,6 +53,11 @@
 	                    	      Эта карточка про [% cat.name %].
 	                    	    </div>
 	                    	  </div>
+                              <div id="pays[% cat.id %]" class="ui relaxed celled list">
+                                  <!-- <div class="item">jhgljhgljhglj <div class="right floated">hohoho</div></div>
+                                  <div class="item">567575 w/o content <div class="right floated">hehehe!</div></div>
+                                  <div class="item">3223524243</div> -->
+                              </div>
 	                    	  <button class="ui bottom attached button" id="addpay[% cat.id %]">
 	                    	      <i class="add icon"></i> Новый расход
 	                    	  </button>
@@ -178,26 +183,18 @@ $(function() {
 						},
 						dataType: "json",
 						cache: false
-						// contentType: "application/json",
 					})
                     .always(function(data) {
-                        console.log("!!!! ALWAYS HERE!");
-						_log(data);
 						$('#addpay').toggleClass('loading');
 					})
 					.done(function(data) {
-						_log(`OK with ${cat_id}`);
-                        _log(`Now getting fpp from ${cat_id}`);
                         $.ajax({
                             type: 'GET',
                             url: '/category/fpcat/' + cat_id
                         })
-                        .always(function(data) {
-                            console.log("...ALWAYS.");
-                        })
+                        .always(function(data) {})
                         .done(function(data) {
-                            console.log(">> DONE with fpp!");
-                            _log(data);
+                            fillCategory(cat_id, data);
                         })
                         .fail(function() {});
                         $('#mymodal').modal('hide');
@@ -226,6 +223,31 @@ $(function() {
 		}
 	}
 
+    function fillCategory(cat_id, data) {
+        _log(`!!! Now filling ${cat_id}`);
+        let $pays = $(`div#pays${cat_id}`);
+        $pays.html('');
+        for (let fp of data.fp_pay) {
+            let dt = (fp.date.split('T'))[0];
+            $pays.append(`<div class="item" id="fcp${fp.id}">${fp.comment} <div class="right floated"><b>${fp.sum}</b> ${dt}</div></div>`);
+        }
+    }
+
+    function getAllCategories(cats) {
+        for (let cat of cats) {
+            _log(`card${cat}`);
+            $.ajax({
+                type: 'GET',
+                url: '/category/fpcat/' + cat
+            })
+            .always(function(data) {})
+            .done(function(data) {
+                fillCategory(cat, data);
+            })
+            .fail(function() {});
+        }
+    }
+
 	$('.ui.dropdown')
 		.dropdown()
 	;
@@ -235,6 +257,12 @@ $(function() {
 		.sidebar('setting', 'mobileTransition', 'overlay')
  		.sidebar('attach events', '#side_menu')
  	;
+
+    var $cats = [ [% FOREACH cat IN cats %] [% cat.id %], [% END %] ];
+
+    getAllCategories($cats);
+
+
 });
 </script>
 </body>
