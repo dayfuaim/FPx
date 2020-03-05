@@ -71,8 +71,6 @@ __PACKAGE__->add_columns(
   },
   "name",
   { data_type => "text", is_nullable => 0 },
-  "sum_planned",
-  { data_type => "real", default_value => "0.0", is_nullable => 0 },
   "sort_order",
   { data_type => "integer", default_value => 0, is_nullable => 0 },
 );

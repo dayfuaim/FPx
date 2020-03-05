@@ -56,7 +56,7 @@ sub fpcat {
         my $dt = $pay->date;
         push @fpp => {
             id => $p->id,
-            date => qq{$dt},
+            date => $dt->dmy('.'),
             sum => sprintf("%.2f", $pay->sum),
             comment => $pay->comment
         }

@@ -33,7 +33,7 @@
                     	<div class="ui segments">
                     	[% FOR fpcat IN fp_cats %]
                     		<div class="ui clearing segment">
-                    			<h3 class="ui header"><span class="ui large label">[% fpcat.name %]</span></h3> <h3 class="ui right aligned header">[% fpcat.sum %]</h3>
+                    			<h3 class="ui header"><span class="ui large label">[% fpcat.name %]</span></h3> <h3 class="ui right aligned header" id="catsum[% fpcat.category_id %]">[% fpcat.sum %]</h3>
                     		</div>
                     	[% END %]
                 		</div>
@@ -54,9 +54,6 @@
 	                    	    </div>
 	                    	  </div>
                               <div id="pays[% cat.id %]" class="ui relaxed celled list">
-                                  <!-- <div class="item">jhgljhgljhglj <div class="right floated">hohoho</div></div>
-                                  <div class="item">567575 w/o content <div class="right floated">hehehe!</div></div>
-                                  <div class="item">3223524243</div> -->
                               </div>
 	                    	  <button class="ui bottom attached button" id="addpay[% cat.id %]">
 	                    	      <i class="add icon"></i> Новый расход
@@ -188,15 +185,7 @@ $(function() {
 						$('#addpay').toggleClass('loading');
 					})
 					.done(function(data) {
-                        $.ajax({
-                            type: 'GET',
-                            url: '/category/fpcat/' + cat_id
-                        })
-                        .always(function(data) {})
-                        .done(function(data) {
-                            fillCategory(cat_id, data);
-                        })
-                        .fail(function() {});
+                        getFCP(cat_id);
                         $('#mymodal').modal('hide');
 					})
 					.fail(function() {
@@ -224,28 +213,30 @@ $(function() {
 	}
 
     function fillCategory(cat_id, data) {
-        _log(`!!! Now filling ${cat_id}`);
         let $pays = $(`div#pays${cat_id}`);
         $pays.html('');
         for (let fp of data.fp_pay) {
-            let dt = (fp.date.split('T'))[0];
-            $pays.append(`<div class="item" id="fcp${fp.id}">${fp.comment} <div class="right floated"><b>${fp.sum}</b> ${dt}</div></div>`);
+            let dt = fp.date;
+            $pays.append(`<div class="item" id="fcp${fp.id}"><span class="ui small text">${fp.comment}</span> <div class="right floated"><b>${fp.sum}</b> ${dt}</div></div>`);
         }
     }
 
     function getAllCategories(cats) {
         for (let cat of cats) {
-            _log(`card${cat}`);
-            $.ajax({
-                type: 'GET',
-                url: '/category/fpcat/' + cat
-            })
-            .always(function(data) {})
-            .done(function(data) {
-                fillCategory(cat, data);
-            })
-            .fail(function() {});
+            getFCP(cat);
         }
+    }
+
+    function getFCP(cat) {
+        $.ajax({
+            type: 'GET',
+            url: '/category/fpcat/' + cat
+        })
+        .always(function(data) {})
+        .done(function(data) {
+            fillCategory(cat, data);
+        })
+        .fail(function() {});
     }
 
 	$('.ui.dropdown')

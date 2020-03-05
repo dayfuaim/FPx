@@ -90,14 +90,20 @@ sub all_planned {
 		})->all();
 	my @fpc;
 	foreach my $f (@fp) {
+        my $cat = $f->related_resultset('category')->find($f->category_id);
+        my $sort = $cat->get_column('sort_order');
+        next if $sort == -1;
 		push @fpc => {
 			fp_id => $fp_current,
 			category_id => $f->category_id,
-			name => $f->related_resultset('category')->find($f->category_id)->get_column('name'),
+			name => $cat->get_column('name'),
 			sum => $f->sum,
+            sort_order => $sort,
 		};
 	}
 	say "all_planned >>";
+    @fpc = sort { $a->{sort_order} <=> $b->{sort_order} } @fpc;
+    p @fpc;
 	return \@fpc
 }
 
