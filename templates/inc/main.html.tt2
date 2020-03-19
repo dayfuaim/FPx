@@ -1,4 +1,6 @@
-[% USE dumper %]
+[% USE Dumper %]
+[% USE format %]
+[% num = format('%.2f') %]
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="ru">
 <head>
@@ -32,14 +34,24 @@
                 	<div class="three wide computer sixteen wide mobile column">
                     	<div class="ui segments">
                     	[% FOR fpcat IN fp_cats %]
-                    		<div class="ui clearing segment">
-                    			<h3 class="ui header"><span class="ui large label">[% fpcat.name %]</span></h3> <h3 class="ui right aligned header" id="catsum[% fpcat.category_id %]">[% fpcat.sum %]</h3>
+                    		<div class="ui segment">
+                                <div class="ui two column stackable grid">
+                                    <div class="row">
+                                        <div class="ui column">
+                                            <h3 class="ui header">[% fpcat.name %]</h3>
+                                        </div>
+                                        <div class="ui right aligned column">
+                                            <div class="ui large basic tag label" id="catsum[% fpcat.category_id %]">[% num(fpcat.sum) %]</div>
+                                        </div>
+                                    </div>
+                                </div>
                     		</div>
                     	[% END %]
                 		</div>
                 	</div>
 
                     <div class="ten wide computer sixteen wide mobile column">
+                        <div class="ui header">[% fp_curr.date_in.dmy('.') %] – [% fp_curr.date_out.dmy('.') %]</div>
                     	<div class="ui cards">
 
 	                    [% FOR cat IN cats %]
@@ -68,8 +80,17 @@
                     <div class="three wide computer sixteen wide mobile column">
                     	<div class="ui segments">
                     	[% FOR pock IN pockets %]
-                    		<div class="ui clearing segment">
-                    			<h3 class="ui header"><span class="ui large label">[% pock.name %]</span></h3> <h3 class="ui right aligned header">[% pock.sum %]</h3>
+                    		<div class="ui segment">
+                                <div class="ui two column stackable grid">
+                                    <div class="row">
+                                        <div class="ui column">
+                                            <h3 class="ui header">[% pock.name %]</h3>
+                                        </div>
+                                        <div class="ui right aligned column">
+                                            <div class="ui large basic tag label" id="catsum[% fpcat.category_id %]">[% num(pock.sum) %]</div>
+                                        </div>
+                                    </div>
+                                </div>
                     		</div>
                     	[% END %]
                 		</div>

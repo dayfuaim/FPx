@@ -6,51 +6,51 @@ use utf8;
 use DateTime;
 use FPx::Schema;
 
-my $schema = FPx::Schema->connect(
-	'dbi:Pg:dbname=fpx', 'dayfuaim', '',
-	{ AutoCommit => 1, RaiseError => 1, }
-);
+my $schema = FPx::Schema->connect('dbi:Pg:dbname=fpx', 'dayfuaim', '', {AutoCommit => 1, RaiseError => 1,});
 
 # Just input FORM
 sub form {
-  	my $self = shift;
-	$self->stash(cats => $self->model("Category")->get());
-	$self->render(template => 'inc/in_form')
+    my $self = shift;
+    $self->stash(cats => $self->model("Category")->get());
+    $self->render(template => 'inc/in_form');
 }
 
 # This action will render a template
 sub add {
-  	my $self = shift;
+    my $self = shift;
 
-	my $fp_id = $self->param('fp_id');
-	my $date = $self->param('date');
-	if ($date =~ /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/) {
-		$date = sprintf("%4d-%02d-%02d",$3,$2,$1)
-	} else {
-		$date = DateTime->now->ymd;
-	}
-	my $sum = $self->param('sum');
-	my $comment = $self->param('comment');
-	my $cat_id = $self->param('cat_id');
+    my $fp_id = $self->param('fp_id');
+    my $date  = $self->param('date');
+    if ($date =~ /^(\d{1,2})\.(\d{1,2})\.(\d{4})$/) {
+        $date = sprintf("%4d-%02d-%02d", $3, $2, $1);
+    }
+    else {
+        $date = DateTime->now->ymd;
+    }
+    my $sum     = $self->param('sum');
+    my $comment = $self->param('comment');
+    my $cat_id  = $self->param('cat_id');
 
-	$sum =~ s/[^0-9.]//g;
-	$sum //= 0;
+    $sum =~ s/[^0-9.]//g;
+    $sum //= 0;
 
-	my $pay_id = $self->model('Payment')->add_pay($date, $sum, $comment);
-	my $catpay_id = $schema->resultset('FpPayment')->update_or_create({
-		fp_id => $fp_id,
-		payment_id => $pay_id,
-		category_id => $cat_id,
-	})->id;
+    my $pay_id    = $self->model('Payment')->add_pay($date, $sum, $comment);
+    my $catpay_id = $schema->resultset('FpPayment')->update_or_create(
+        {
+            fp_id       => $fp_id,
+            payment_id  => $pay_id,
+            category_id => $cat_id,
+        }
+    )->id;
 
-  	# Render JSON
-  	$self->render(json => { catpay_id => $catpay_id, pay_id => $pay_id, date => $date, sum => $sum, comment => $comment });
+    # Render JSON
+    $self->render(json => {catpay_id => $catpay_id, pay_id => $pay_id, date => $date, sum => $sum, comment => $comment});
 }
 
 sub get {
     my $self = shift;
+
     # body...
 }
-
 
 1;

@@ -29,6 +29,7 @@ sub current {
     # my @cats = $schema->resultset('Category')->all;
     # p @cats;
     say "[FP::Current] ".$fp->id;
+    say "... REF: ". ref $fp->date_in;
     say "current >>";
 	return $fp
 }
@@ -63,6 +64,12 @@ sub add {
 		say ">>>> date_out: ".dumper($last_last_dt);
 	}
 	$fp = $schema->resultset('Fp')->create({ date_in => $last_dt, date_out => $last_last_dt, sum_total => 0 },{ result_class => 'DBIx::Class::ResultClass::HashRefInflator' });
+    $schema->storage->debug(1);
+    my @cats = $schema->resultset('Category')->search(undef, { result_class => 'DBIx::Class::ResultClass::HashRefInflator' })->all();
+    foreach my $cat (@cats) {
+        $schema->resultset('FpCategory')->create({fp_id => $fp->id, category_id => $cat->id, sum => 0});
+    }
+    $schema->storage->debug(0);
 	return $fp
 }
 
@@ -74,9 +81,8 @@ sub all {
 
 sub all_planned {
 	my $self = shift;
-	say ">> all_planned";
 	my $fp_current = $self->current();
-    $schema->storage->debug(1);
+    # $schema->storage->debug(1);
 	my @fp = $schema->resultset('FpCategory')->search(
 		{
 			fp_id => $fp_current->id,
@@ -101,9 +107,7 @@ sub all_planned {
             sort_order => $sort,
 		};
 	}
-	say "all_planned >>";
     @fpc = sort { $a->{sort_order} <=> $b->{sort_order} } @fpc;
-    p @fpc;
 	return \@fpc
 }
 
