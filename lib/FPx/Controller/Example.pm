@@ -24,6 +24,7 @@ sub welcome {
 	my $tt = $self->stash('name') || 'noname';
 	$self->stash(cats => $self->model("Category")->get());
 	$self->stash(pockets => $self->model("Pocket")->get());
+    $self->stash(fp_incomes => $self->model("Income")->get());
 	$self->stash(fp_cats => $self->model("FP")->all_planned());
 	my $fp_curr = $self->model("FP")->current();
 	$self->stash(fp_curr => $fp_curr);
