@@ -249,6 +249,9 @@ $(function() {
 			transition: 'fade down',
 			onShow: function() {
                 let elt = event.target.id;
+                if (!elt) {
+                    elt = event.target.parentElement.id;
+                }
                 if (elt.match(/^addpay\d+$/)) {
                     let cat_id = elt.substring(6);
                     $('.ui.dropdown').dropdown('set selected', cat_id);
