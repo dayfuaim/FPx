@@ -6,5 +6,8 @@
 		<a href="#" class="item" id="cat_add"><i class="add icon"></i> Add Category</a>
 		<a href="#" class="item" id="cat_edit"><i class="add icon"></i> Edit Category</a>
 		<a href="#" class="item" id="income_add"><i class="add icon"></i> Add Income</a>
+        <div class="ui header item">
+            [% fp_curr.date_in.dmy('.') %] – [% fp_curr.date_out.dmy('.') %]
+        </div>
 	</div>
 </div>

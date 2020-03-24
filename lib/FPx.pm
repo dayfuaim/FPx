@@ -39,9 +39,14 @@ sub startup {
 	# Normal routes to controller
 	$r->get('/')->to('example#welcome');
 	$r->get('/new')->to('payment#form');
-	$r->post('/payment/add')->to('payment#add');
+
+    $r->post('/payment/add')->to('payment#add');
+
     $r->get('/category/fpcat/:cat')->to('category#fpcat');
 	$r->get('/category/:id')->to('category#item');
+
+    $r->get('/fpcategory/:fpid/:catid')->to('fpcategory#get');
+    $r->post('/fpcategory/add')->to('fpcategory#add');
 }
 
 1;

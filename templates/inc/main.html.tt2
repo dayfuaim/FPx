@@ -31,22 +31,14 @@
 
                 <div class="ui padded grid">
                     <div class="row">
-                        <div class="sixteen wide column header">
-                            <div class="ui header">
-                                [% fp_curr.date_in.dmy('.') %] – [% fp_curr.date_out.dmy('.') %]
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
 
                     	<div class="four wide column">
                             <!-- Categories -->
                             <table class="ui compact table">
                                 [% FOR fpcat IN fp_cats %]
                                 <tr>
-                                    <td class="ui eleven wide small header">[% fpcat.name %]</td>
-                                    <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]">[% num(fpcat.sum) %]</td>
+                                    <td class="ui eleven wide"><div class="ui left floated medium header">[% fpcat.name %]</div> <button class="ui right floated circular icon button" id="addplan[% fpcat.category_id %]"><i class="icon add"></i></button></td>
+                                    <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]"><div class="ui basic tag label">[% num(fpcat.sum) %]</div></td>
                                 </tr>
                                 [% END %]
                             </table>
@@ -56,7 +48,7 @@
                                 [% FOR inc IN fp_incomes %]
                                 <tr>
                                     <td class="ui eleven wide small header">[% inc.comment %]</td>
-                                    <td class="five wide right aligned green" id="pock[% inc.id %]">[% num(inc.sum) %]</td>
+                                    <td class="five wide right aligned green" id="inc[% inc.id %]">[% num(inc.sum) %]</td>
                                 </tr>
                                 [% END %]
                             </table>
@@ -105,7 +97,7 @@
 	<!-- </div> -->
 
 [%# THE Stuff %]
-<div class="ui small modal" id="mymodal">
+<div class="ui small modal" id="paymodal">
 	<div class="ui blue header">Новый расход</div>
 	<div class="content">
 		<form class="ui large form" id="addpay">
@@ -123,6 +115,28 @@
 						</select>
 					</div>
 				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="actions">
+		<button class="ui cancel button">Cancel</button>
+		<button class="ui positive approve button">Добавить</button>
+	</div>
+</div>
+
+<div class="ui small modal" id="planmodal">
+	<div class="ui blue header">Добавить в План</div>
+	<div class="content">
+		<form class="ui large form" id="addplan">
+			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
+			<input type="hidden" name="cat_id" id="cat_id" value="">
+			<div class="ui stacked segment">
 				<div class="field">
 					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
 				</div>
@@ -168,13 +182,75 @@ $(function() {
 		},
 	};
 
-	$('#mymodal')
+    $('#planmodal')
+        .modal({
+            transition: 'fade down',
+            onShow: function() {
+                console.log("Plan Modal!!!");
+                let elt = event.target.id;
+                if (!elt) {
+                    elt = event.target.parentElement.id;
+                }
+                if (elt.match(/^addplan\d+$/)) {
+                    let cat_id = elt.substring(7);
+                    console.log(`Category is ${cat_id}`);
+                    $('#cat_id').val(cat_id);
+                }
+            },
+            onApprove: function() {
+                console.log("Adding planned expense.");
+                let fp_id = $('#fp_id').val();
+                let sum = $('#sum').val();
+                let cat_id = $('#cat_id').val();
+                let comment = $('#comment').val();
+                if (sum != '') {
+                    $('#addplan').toggleClass('loading');
+                    let URL = '/fpcategory/add';
+                    _log(`>>> Sending to ${URL}`);
+                    let aObj = $.ajax({
+                        url: URL,
+                        type: 'POST',
+                        data: {
+                            fp_id: fp_id,
+							sum: sum,
+							cat_id: cat_id,
+							comment: comment
+                        },
+                        dataType: "json",
+                        cache: false
+                    })
+                    .always(function(data) {
+                        $('#addplan').toggleClass('loading');
+                    })
+                    .done(function(data) {
+                        $('#planmodal').modal('hide');
+                        $.ajax({
+                            type: 'GET',
+                            url: `/fpcategory/${fp_id}/${cat_id}`
+                        })
+                        .always(function(data) {})
+                        .done(function(data) {
+                            console.log(data);
+                            setFPCat(cat_id, data);
+                        })
+                        .fail(function() {});
+                    })
+                    .fail(function() {
+                        _log("Oops!")
+                    });
+                }
+            }
+        })
+		.modal('attach events', 'button[id^="addplan"]', 'show')
+    ;
+
+	$('#paymodal')
 		.modal({
 			transition: 'fade down',
 			onShow: function() {
-                var elt = event.target.id;
+                let elt = event.target.id;
                 if (elt.match(/^addpay\d+$/)) {
-                    var cat_id = elt.substring(6);
+                    let cat_id = elt.substring(6);
                     $('.ui.dropdown').dropdown('set selected', cat_id);
                 }
 				$('#dt').calendar(cal_options);
@@ -187,7 +263,7 @@ $(function() {
 				let cat_id = $('#cat_id').val();
 				let comment = $('#comment').val();
 				if (sum!=='') {
-					$('#addpay').toggleClass('loading');
+					$('#addplan').toggleClass('loading');
 					let URL = '/payment/add';
 					_log(">>>> Sending: "+URL);
 					let aObj = $.ajax({
@@ -204,17 +280,16 @@ $(function() {
 						cache: false
 					})
                     .always(function(data) {
-						$('#addpay').toggleClass('loading');
+						$('#addplan').toggleClass('loading');
 					})
 					.done(function(data) {
                         getFCP(cat_id);
-                        $('#mymodal').modal('hide');
+                        $('#paymodal').modal('hide');
 					})
 					.fail(function() {
 						_log("Oops!")
 					});
 				} else {
-					// $('#myform').toggleClass('loading');
 					_log("ERROR! Nothing to send!");
 				}
 
@@ -259,6 +334,12 @@ $(function() {
             fillCategory(cat, data);
         })
         .fail(function() {});
+    }
+
+    function setFPCat(cat, data) {
+        let $cat = $(`td#catsum${cat} div.tag.label`);
+        $cat.html('');
+        $cat.html(data['sum']);
     }
 
 	$('.ui.dropdown')
