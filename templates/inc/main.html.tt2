@@ -38,7 +38,7 @@
                                 [% FOR fpcat IN fp_cats %]
                                 <tr>
                                     <td class="ui eleven wide"><div class="ui left floated medium header">[% fpcat.name %]</div> <button class="ui right floated circular icon button" id="addplan[% fpcat.category_id %]"><i class="icon add"></i></button></td>
-                                    <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]"><div class="ui basic tag label">[% num(fpcat.sum) %]</div></td>
+                                    <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]"><div class="ui basic large tag label" data-html="<div class='content'><table class='ui very basic compact table'><tr><td>kjhagsdkjhg</td><td>7676767</td></tr></table></div>" data-position="right center">[% num(fpcat.sum) %]</div></td>
                                 </tr>
                                 [% END %]
                             </table>
@@ -199,10 +199,10 @@ $(function() {
             },
             onApprove: function() {
                 console.log("Adding planned expense.");
-                let fp_id = $('#fp_id').val();
-                let sum = $('#sum').val();
-                let cat_id = $('#cat_id').val();
-                let comment = $('#comment').val();
+                let fp_id = $('form#addplan input#fp_id').val();
+                let sum = $('form#addplan input#sum').val();
+                let cat_id = $('form#addplan #cat_id').val();
+                let comment = $('form#addplan input#comment').val();
                 if (sum != '') {
                     $('#addplan').toggleClass('loading');
                     let URL = '/fpcategory/add';
@@ -260,11 +260,11 @@ $(function() {
 			},
 			onApprove: function() {
 				console.log("Let's go!");
-				let fp_id = $('#fp_id').val();
-				let date = $('#date').val();
-				let sum = $('#sum').val();
-				let cat_id = $('#cat_id').val();
-				let comment = $('#comment').val();
+				let fp_id = $('form#addpay input#fp_id').val();
+				let date = $('form#addpay input#date').val();
+				let sum = $('form#addpay input#sum').val();
+				let cat_id = $('form#addpay #cat_id').val();
+				let comment = $('form#addpay input#comment').val();
 				if (sum!=='') {
 					$('#addplan').toggleClass('loading');
 					let URL = '/payment/add';
@@ -339,6 +339,25 @@ $(function() {
         .fail(function() {});
     }
 
+    function getAllFCSums(cats) {
+        for (let cat of cats) {
+            getFCSum([% fp_curr.id %], cat);
+        }
+    }
+
+    function getFCSum(fp_id, cat) {
+        $.ajax({
+            type: 'GET',
+            url: `/fpcategory/${fp_id}/${cat}`
+        })
+        .always(function(data) {})
+        .done(function(data) {
+            console.log(data);
+            // fillCategory(cat, data);
+        })
+        .fail(function() {});
+    }
+
     function setFPCat(cat, data) {
         let $cat = $(`td#catsum${cat} div.tag.label`);
         $cat.html('');
@@ -358,7 +377,10 @@ $(function() {
     var $cats = [ [% FOREACH cat IN cats %] [% cat.id %], [% END %] ];
 
     getAllCategories($cats);
+    getAllFCSums($cats);
 
+    // Popups setup
+    $('td[id^="catsum"] div.tag').popup();
 
 });
 </script>

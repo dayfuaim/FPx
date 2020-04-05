@@ -11,7 +11,7 @@ my $schema = FPx::Schema->connect('dbi:Pg:dbname=fpx', 'dayfuaim', '', {AutoComm
 
 sub current {
     my $self = shift;
-    say ">> current";
+    # say ">> current";
     my $fp = $schema->resultset('Fp')->search(
         {
             date_out => {'>=', \'NOW() - interval \'24 hours\''},
@@ -30,9 +30,9 @@ sub current {
 
     # my @cats = $schema->resultset('Category')->all;
     # p @cats;
-    say "[FP::Current] " . $fp->id;
-    say "... REF: " . ref $fp->date_in;
-    say "current >>";
+    # say "[FP::Current] " . $fp->id;
+    # say "... REF: " . ref $fp->date_in;
+    # say "current >>";
     return $fp;
 }
 
@@ -71,12 +71,10 @@ sub add {
         say ">>>> date_out: " . dumper($last_last_dt);
     }
     $fp = $schema->resultset('Fp')->create({date_in => $last_dt, date_out => $last_last_dt, sum_total => 0}, {result_class => 'DBIx::Class::ResultClass::HashRefInflator'});
-    $schema->storage->debug(1);
     my @cats = $schema->resultset('Category')->search(undef, {result_class => 'DBIx::Class::ResultClass::HashRefInflator'})->all();
     foreach my $cat (@cats) {
         $schema->resultset('FpCategory')->create({fp_id => $fp->id, category_id => $cat->id, sum => 0});
     }
-    $schema->storage->debug(0);
     return $fp;
 }
 
@@ -91,30 +89,31 @@ sub all_planned {
     my $fp_current = $self->current();
 
     # $schema->storage->debug(1);
-    my @fp = $schema->resultset('FpCategory')->search(
-        {
-            fp_id => $fp_current->id,
-        },
-        {
-            columns  => ['category_id', {sum => \['SUM(sum)'],},],
-            group_by => [qw/category_id/],
-
-            # result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-        }
-    )->all();
+    my @cats = $schema->resultset('Category')->search(undef, {})->all();
     my @fpc;
-    foreach my $f (@fp) {
-        my $cat  = $f->related_resultset('category')->find($f->category_id);
-        my $sort = $cat->get_column('sort_order');
-        next if $sort == -1;
+    foreach my $c (@cats) {
+        next if $c->sort_order == -1;
+        my $fpc = $schema->resultset('FpCategory')->search(
+            {
+                fp_id => $fp_current->id,
+                category_id => $c->id,
+            },
+            {
+                columns => [ { sum => \['SUM(sum)'] } ],
+                group_by => [qw/category_id/],
+            }
+        )->first();
+        my $sum = $fpc ? $fpc->sum : 0;
         push @fpc => {
             fp_id       => $fp_current,
-            category_id => $f->category_id,
-            name        => $cat->get_column('name'),
-            sum         => $f->sum,
-            sort_order  => $sort,
+            category_id => $c->id,
+            name        => $c->name,
+            sum         => $sum, # $fpc->sum,
+            sort_order  => $c->sort_order,
         };
     }
+    # $schema->storage->debug(0);
+
     @fpc = sort { $a->{sort_order} <=> $b->{sort_order} } @fpc;
     return \@fpc;
 }

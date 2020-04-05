@@ -19,7 +19,7 @@ use DDP;
 sub welcome {
   	my $self = shift;
 
-    say __PACKAGE__ . ": We are here!";
+    # p $self->req->remote_addr;
 
 	my $tt = $self->stash('name') || 'noname';
 	$self->stash(cats => $self->model("Category")->get());

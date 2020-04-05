@@ -20,6 +20,7 @@ sub get {
     my $fp_id   = $self->param('fpid');
     my $cat_id  = $self->param('catid');
 
+    # $schema->storage->debug(1);
     my @fpcat = $schema->resultset('FpCategory')->search(
         {
             fp_id => $fp_id,
@@ -31,9 +32,29 @@ sub get {
         }
     )->all();
 
-    my $sum = $fpcat[0]->sum;
+    my $sum = @fpcat ? $fpcat[0]->sum : 0;
 
-    $self->render(json => { sum => sprintf("%.2f", $sum) });
+    @fpcat = $schema->resultset('FpCategory')->search(
+        {
+            fp_id => $fp_id,
+            category_id => $cat_id,
+        },
+        {
+            columns  => ['category_id', 'sum', 'comment'],
+            # result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+        }
+    )->all();
+    my @fpc;
+    foreach my $f (@fpcat) {
+        push @fpc => {
+            category_id => $f->category_id,
+            sum         => $f->sum,
+            comment => $f->comment,
+        };
+    }
+    # $schema->storage->debug(0);
+
+    $self->render(json => { sum => sprintf("%.2f", $sum), fpc => [ @fpc ] });
 
 }
 

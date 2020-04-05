@@ -16,7 +16,6 @@ sub get {
 	my $id = shift;
 
 	my @cat = $schema->resultset('Category')->search($id ? { id => $id } : { sort_order => { '>=' => 0 } }, { order_by => { -asc => 'me.sort_order' }, result_class => 'DBIx::Class::ResultClass::HashRefInflator' })->all;
-    p @cat;
     @cat = sort { $a->{sort_order} <=> $b->{sort_order} } @cat unless $id;
 	return $id ? @cat : \@cat
 }

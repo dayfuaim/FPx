@@ -2,15 +2,25 @@ package FPx;
 use uni::perl ':dumper';
 use Mojo::Base 'Mojolicious';
 
+use Mojo::Message::Request;
+
 # use FPx::Model;    # <-- подключаем модуль с моделью
 use FPx::Controller::FP;
 
+use DDP;
 
 # This method will run once at server start
 sub startup {
 	my $self = shift;
 
-	# >>>>>> PLUGINS
+    my $app = $self->app;
+    my $log = $app->log;
+
+    $log->debug("================ START ================");
+    # my $log = Mojo::Log->new(path => './mojo.log', level => 'warn');
+
+    # >>>>>> PLUGINS
+    $self->plugin('BasicAuthPlus');
 	$self->plugin('Model'
 	# 	, {
 	# 	params => {
@@ -29,12 +39,38 @@ sub startup {
 	# <<<<<< //PLUGINS
 
 	# >>>>> HELPERS
-    # $self->helper(fp => sub { FPx::Controller::FP->new() });
 
     # <<<<<< //HELPERS
 
+    # Log messages
+    # $log->debug('Not sure what is happening here');
+    # $log->info('FYI: it happened again');
+    # $log->warn('This might be a problem');
+    # $log->error('Garden variety error');
+    # $log->fatal('Boom');
+
+    $app->hook(before_routes => sub {
+        my $c = shift;
+        $log->info("BEFORE ROUTES");
+    });
+
 	# Router
 	my $r = $self->routes;
+
+    $r->add_condition(
+        isAuth => sub {
+            my ($route, $c, $captures, $pattern) = @_;
+            my ($hash_ref, $auth_ok) = $c->basic_auth(
+                "My Realm" => {
+                    username => 'dayfuaim',
+                    password => 'tGP$qa.+At'
+                }
+            );
+            return $auth_ok;
+        }
+    );
+
+    $r = $r->over(isAuth => 1);
 
 	# Normal routes to controller
 	$r->get('/')->to('example#welcome');
