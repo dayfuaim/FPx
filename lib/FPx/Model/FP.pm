@@ -28,11 +28,6 @@ sub current {
         $fp = $self->add();
     }
 
-    # my @cats = $schema->resultset('Category')->all;
-    # p @cats;
-    # say "[FP::Current] " . $fp->id;
-    # say "... REF: " . ref $fp->date_in;
-    # say "current >>";
     return $fp;
 }
 
@@ -71,10 +66,6 @@ sub add {
         say ">>>> date_out: " . dumper($last_last_dt);
     }
     $fp = $schema->resultset('Fp')->create({date_in => $last_dt, date_out => $last_last_dt, sum_total => 0}, {result_class => 'DBIx::Class::ResultClass::HashRefInflator'});
-    my @cats = $schema->resultset('Category')->search(undef, {result_class => 'DBIx::Class::ResultClass::HashRefInflator'})->all();
-    foreach my $cat (@cats) {
-        $schema->resultset('FpCategory')->create({fp_id => $fp->id, category_id => $cat->id, sum => 0});
-    }
     return $fp;
 }
 
