@@ -1,0 +1,55 @@
+<!-- MODALS -->
+<div class="ui small modal" id="paymodal">
+	<div class="ui blue header">Новый расход</div>
+	<div class="content">
+		<form class="ui large form" id="addpay">
+			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
+			<div class="ui stacked segment">
+				<div class="field">
+					<div class="ui calendar" id="dt"><div class="ui input left icon"><i class="calendar icon"></i><input type="text" id="date" name="date" placeholder="Дата"></div></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input">
+						<select class="ui dropdown" name="cat_id" id="cat_id">
+						[% FOREACH cat IN cats %]
+							<option value="[% cat.id %]">[% cat.name %]</option>
+						[% END %]
+						</select>
+					</div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="actions">
+		<button class="ui cancel button">Cancel</button>
+		<button class="ui positive approve button">Добавить</button>
+	</div>
+</div>
+
+<div class="ui small modal" id="planmodal">
+	<div class="ui blue header">Добавить в План</div>
+	<div class="content">
+		<form class="ui large form" id="addplan">
+			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
+			<input type="hidden" name="cat_id" id="cat_id" value="">
+			<div class="ui stacked segment">
+				<div class="field">
+					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
+				</div>
+				<div class="field">
+					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="actions">
+		<button class="ui cancel button">Cancel</button>
+		<button class="ui positive approve button">Добавить</button>
+	</div>
+</div>

@@ -33,59 +33,19 @@
                     <div class="row">
 
                     	<div class="four wide column">
-                            <!-- Categories -->
-                            <table class="ui compact table">
-                                [% FOR fpcat IN fp_cats %]
-                                <tr>
-                                    <td class="ui eleven wide"><div class="ui left floated medium header">[% fpcat.name %]</div> <button class="ui right floated circular icon button" id="addplan[% fpcat.category_id %]"><i class="icon add"></i></button></td>
-                                    <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]"><div class="ui basic large tag label" data-html="<div class='content'><table class='ui very basic compact table'><tr><td>kjhagsdkjhg</td><td>7676767</td></tr></table></div>" data-position="right center">[% num(fpcat.sum) %]</div></td>
-                                </tr>
-                                [% END %]
-                            </table>
 
-                            <!-- Incomes -->
-                            <table class="ui compact table">
-                                [% FOR inc IN fp_incomes %]
-                                <tr>
-                                    <td class="ui eleven wide small header">[% inc.comment %]</td>
-                                    <td class="five wide right aligned green" id="inc[% inc.id %]">[% num(inc.sum) %]</td>
-                                </tr>
-                                [% END %]
-                            </table>
-                            <!-- Pockets -->
-                            <table class="ui compact table">
-                                [% FOR pock IN pockets %]
-                                <tr>
-                                    <td class="ui eleven wide small header">[% pock.name %]</td>
-                                    <td class="five wide right aligned red" id="pock[% pock.id %]">[% num(pock.sum) %]</td>
-                                </tr>
-                                [% END %]
-                            </table>
+[% INCLUDE 'inc/plan_categories' %]
+
+[% INCLUDE 'inc/incomes' %]
+
+[% INCLUDE 'inc/pockets' %]
+
                     	</div>
 
                         <div class="twelve wide column">
-                        	<div class="ui cards">
 
-    	                    [% FOR cat IN cats %]
-    	                    	<div class="ui card">
-    	                    	  <div class="content">
-    	                    	    <a class="header">[% cat.name %]</a>
-    	                    	    <div class="meta">
-    	                    	      <span class="date">[% cat.name %]</span>
-    	                    	    </div>
-    	                    	    <div class="description">
-    	                    	      Эта карточка про [% cat.name %].
-    	                    	    </div>
-    	                    	  </div>
-                                  <div id="pays[% cat.id %]" class="ui relaxed celled list">
-                                  </div>
-    	                    	  <button class="ui bottom attached button" id="addpay[% cat.id %]">
-    	                    	      <i class="add icon"></i> Новый расход
-    	                    	  </button>
-    	                    	</div>
-    	                    [% END %]
+[% INCLUDE 'inc/fp_cats' %]
 
-                        	</div>
                         </div>
 
                     </div>
@@ -97,60 +57,8 @@
 	<!-- </div> -->
 
 [%# THE Stuff %]
-<div class="ui small modal" id="paymodal">
-	<div class="ui blue header">Новый расход</div>
-	<div class="content">
-		<form class="ui large form" id="addpay">
-			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
-			<div class="ui stacked segment">
-				<div class="field">
-					<div class="ui calendar" id="dt"><div class="ui input left icon"><i class="calendar icon"></i><input type="text" id="date" name="date" placeholder="Дата"></div></div>
-				</div>
-				<div class="field">
-					<div class="ui left icon input">
-						<select class="ui dropdown" name="cat_id" id="cat_id">
-						[% FOREACH cat IN cats %]
-							<option value="[% cat.id %]">[% cat.name %]</option>
-						[% END %]
-						</select>
-					</div>
-				</div>
-				<div class="field">
-					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
-				</div>
-				<div class="field">
-					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
-				</div>
-			</div>
-		</form>
-	</div>
-	<div class="actions">
-		<button class="ui cancel button">Cancel</button>
-		<button class="ui positive approve button">Добавить</button>
-	</div>
-</div>
+[% INCLUDE 'inc/_modals' %]
 
-<div class="ui small modal" id="planmodal">
-	<div class="ui blue header">Добавить в План</div>
-	<div class="content">
-		<form class="ui large form" id="addplan">
-			<input type="hidden" name="fp_id" id="fp_id" value="[% fp_curr.id %]">
-			<input type="hidden" name="cat_id" id="cat_id" value="">
-			<div class="ui stacked segment">
-				<div class="field">
-					<div class="ui left icon input"><i class="money icon"></i><input type="text" name="sum" id="sum" placeholder="Сумма"></div>
-				</div>
-				<div class="field">
-					<div class="ui left icon input"><i class="question icon"></i><input type="text" name="comment" id="comment" placeholder="Комментарий"></div>
-				</div>
-			</div>
-		</form>
-	</div>
-	<div class="actions">
-		<button class="ui cancel button">Cancel</button>
-		<button class="ui positive approve button">Добавить</button>
-	</div>
-</div>
 
 <script>
 $(function() {

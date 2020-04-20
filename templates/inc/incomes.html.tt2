@@ -1,0 +1,9 @@
+<!-- Incomes -->
+<table class="ui compact table">
+    [% FOR inc IN fp_incomes %]
+    <tr>
+        <td class="ui eleven wide small header">[% inc.comment %]</td>
+        <td class="five wide right aligned green" id="inc[% inc.id %]">[% num(inc.sum) %]</td>
+    </tr>
+    [% END %]
+</table>

@@ -1,0 +1,20 @@
+<div class="ui cards">
+[% FOR cat IN cats %]
+    <div class="ui card">
+      <div class="content">
+        <a class="header">[% cat.name %]</a>
+        <div class="meta">
+          <span class="date">[% cat.name %]</span>
+        </div>
+        <div class="description">
+          Эта карточка про [% cat.name %].
+        </div>
+      </div>
+      <div id="pays[% cat.id %]" class="ui relaxed celled list">
+      </div>
+      <button class="ui bottom attached button" id="addpay[% cat.id %]">
+          <i class="add icon"></i> Новый расход
+      </button>
+    </div>
+[% END %]
+</div>

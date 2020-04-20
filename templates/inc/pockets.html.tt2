@@ -1,0 +1,9 @@
+<!-- Pockets -->
+<table class="ui compact table">
+    [% FOR pock IN pockets %]
+    <tr>
+        <td class="ui eleven wide small header">[% pock.name %]</td>
+        <td class="five wide right aligned red" id="pock[% pock.id %]">[% num(pock.sum) %]</td>
+    </tr>
+    [% END %]
+</table>

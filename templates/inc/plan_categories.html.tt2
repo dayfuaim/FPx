@@ -1,0 +1,9 @@
+<!-- Categories -->
+<table class="ui compact table">
+    [% FOR fpcat IN fp_cats %]
+    <tr>
+        <td class="ui eleven wide"><div class="ui left floated medium header">[% fpcat.name %]</div> <button class="ui right floated circular icon button" id="addplan[% fpcat.category_id %]"><i class="icon add"></i></button></td>
+        <td class="five wide right aligned inverted blue" id="catsum[% fpcat.category_id %]"><div class="ui basic large tag label" data-html="<div class='content'><table class='ui very basic compact table'><tr><td>kjhagsdkjhg</td><td>7676767</td></tr></table></div>" data-position="right center">[% num(fpcat.sum) %]</div></td>
+    </tr>
+    [% END %]
+</table>
