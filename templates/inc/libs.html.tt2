@@ -1,4 +1,7 @@
 <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+<!-- TODO:
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js" integrity="sha512-BrvVYNhKh6yST24E5DY/LopLO5d+8KYmIXyrpBIJ2PK+CyyJw/cLSG/BfJomWLC1IblNrmiJWGlrGueKLd/Ekw==" crossorigin="anonymous"></script>
+-->
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/fomantic-ui@2.8.4/dist/semantic.min.css">
 <script src="https://unpkg.com/fomantic-ui@2.8.4/dist/semantic.min.js"></script>
 
@@ -7,5 +10,3 @@
 	<link href="/static/tablesaw.css" rel="stylesheet">
 	<script src="/static/tablesaw.js"></script>
 	<script src="/static/tablesaw-init.js"></script -->
-
-

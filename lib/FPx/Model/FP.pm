@@ -61,12 +61,21 @@ sub add {
         # [ 0, -1, -2, -3, -4, -5, -6 ]
         my $back_days = $wday - 3;
         $last_dt = join '-', Add_Delta_Days(($year + 1900, $mon + 1, $mday), $back_days);
-        say ">>>> date_in: " . dumper($last_dt);
         $last_last_dt = join '-', Add_Delta_Days(split(/-/ => $last_dt), 13);
-        say ">>>> date_out: " . dumper($last_last_dt);
     }
+    $last_dt = $self->_normalize_date($last_dt);
+    say ">>>> date_in: " . dumper($last_dt);
+    $last_last_dt = $self->_normalize_date($last_last_dt);
+    say ">>>> date_out: " . dumper($last_last_dt);
     $fp = $schema->resultset('Fp')->create({date_in => $last_dt, date_out => $last_last_dt, sum_total => 0}, {result_class => 'DBIx::Class::ResultClass::HashRefInflator'});
     return $fp;
+}
+
+sub _normalize_date {
+    my $self = shift;
+    my $d = shift;
+    my @d = split $d => /-/;
+    $d = sprintf "%4d-%02d-%02d", @d
 }
 
 sub all {

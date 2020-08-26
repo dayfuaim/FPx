@@ -29,7 +29,7 @@
 		<div class="ui pusher" id="inner">
 			<div class="ui fluid container">
 
-                <div class="ui padded grid">
+                <div class="ui padded compact grid">
                     <div class="row">
 
                     	<div class="four wide column">
