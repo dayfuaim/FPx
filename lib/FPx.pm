@@ -83,6 +83,8 @@ sub startup {
 
     $r->get('/fpcategory/:fpid/:catid')->to('fpcategory#get');
     $r->post('/fpcategory/add')->to('fpcategory#add');
+
+    # TODO: REST part (MAYBE)... Probably not. :(
 }
 
 1;
